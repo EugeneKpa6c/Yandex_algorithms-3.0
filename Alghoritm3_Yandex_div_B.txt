@@ -1,0 +1,1688 @@
+   Тренировка по алгоритмам 3.0 от Яндекса - Дивизион B
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+#1 Гистограмма
+#Python
+import sys
+def zadacha(s):
+     slov = {}
+     max_number = 0 
+     for i in s:
+          if i != ' ':
+               if i not in slov:
+                    slov[i] = 0 
+               slov[i] += 1
+               max_number = max(max_number, slov[i])
+     sorted_slov = sorted(slov.keys())
+     for i in range(max_number, 0 , -1):
+          for j in sorted_slov:
+               if slov[j] >= i:
+                    print('#', end='')
+               else:
+                    print(' ', end='')
+          print()
+     print(''.join(sorted_slov))
+a = ''
+for line in sys.stdin:
+     for word in line.split():
+          a += word
+zadacha(a)
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#2 Красивая строка
+#Python
+k = int(input())
+s = input()
+
+start = 0
+frequency_map = {}
+max_frequency = 0
+longest_substring_length = 0
+for end in range(len(s)):
+    frequency_map[s[end]] = frequency_map.get(s[end], 0) + 1
+    max_frequency = max(max_frequency, frequency_map[s[end]])
+    is_valid = (end + 1 - start - max_frequency <= k)
+    if not is_valid:
+        frequency_map[s[start]] -= 1
+        start += 1
+    longest_substring_length = end + 1 - start
+print(longest_substring_length)
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# 3 Коллекционер Диего
+# Python
+input_string = ''
+
+with open('input.txt', 'r') as reader:
+    for n, line in enumerate(reader,1):
+        input_string += line
+reader.close()
+
+input_string = input_string.replace("\\n", "\n")
+
+string = "".join(input_string.rstrip())
+array = [int(x) for x in string.split()]
+
+start = array[0]
+start_idx = 0
+stop = array[start + 1]
+stop_idx = start + 1
+
+start_array = array[1:start+1]
+stop_array = array[stop_idx:]
+
+counter = 0
+remove_count = 0
+
+len_start = len(start_array)
+start_array = list(set(start_array))
+start_array.sort()
+len_diff = len_start - len(start_array)
+
+stop_idx -= len_diff
+start -= len_diff
+
+array[0] = start
+del array[1:]
+array += start_array + stop_array
+
+def search(list, low, high, value):
+    mid = (low + high) // 2
+
+    if (((value < list[mid]) or (value == list[mid])) and (value > list[mid-1])):
+        return mid
+    if (low == high == 0): return mid
+    if low > high:
+        return False
+    if (value < list[mid]):
+        return search(list, low, mid - 1, value)
+    else:
+        return search(list, mid + 1, high, value)
+
+bag = []
+for i in stop_array[1:]:
+    bin_search = search(start_array, 0 ,len(start_array)-1, i)
+    if (bin_search != False): bag.append(bin_search)
+    if (bin_search == False) and (i <= min(start_array)): bag.append(0)
+    if (bin_search == False) and (i > max(start_array)): bag.append(len(start_array))
+for i in range(len(bag)):
+    print(bag[i])
+ 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+# 4 Контрольная работа
+# Python
+n, k, row, column = int(input()), int(input()), int(input()), int(input())
+pos1 = (row - 1) * 2 + column - k
+pos2 = (row - 1) * 2 + column + k
+row1 = (pos1 + 1) // 2
+row2 = (pos2 + 1) // 2
+
+if pos1 > 0 and (pos2 > n or abs(row - row1) < abs(row - row2)):
+    print(row1, 2 - pos1 % 2)
+elif pos2 <= n:
+    print(row2, 2 - pos2 % 2)
+else:
+    print(-1)
+    
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+# 5 Хорошая строка
+# Python   
+input_string = ''
+
+with open('input.txt', 'r') as reader:
+    for n, line in enumerate(reader,1):
+        input_string += line
+reader.close()
+
+input_string = input_string.replace("\\n", "\n")
+
+string = "".join(input_string.rstrip())
+array = [int(x) for x in string.split()]
+
+num = array[1:]
+count = 0
+
+if len(num) < 2:
+    flag = 0
+else:
+    flag = max(num)
+while flag > 0:
+    for i in range(len(num)):
+        qq = False
+        i = 0
+        j = i+1
+        if (j <len(num)-1):value = num[j]
+        else:
+            j = len(num)-1
+            value = num[j]
+        non_zero = next((i for i, x in enumerate(num) if x), -1)
+        if (num[i] == 0):
+                i = non_zero
+                j = i+1
+        if (len(num)>2) and (i<len(num)-1):
+            if (num[i+1] == 0):
+                num[i] = 0
+                i = i+1
+                j = i
+        if (len(num)<3):
+            count = min(num)*(len(num)-1)
+            flag = 0
+        else:
+            index = []
+            minus = []
+            while (j<len(num)) and (num[j] > 0):
+                if (num[i] >0) and (num[j] >0):
+                    index.append(j)
+                j += 1
+                qq = True
+            for id in index:
+                minus.append(num[id])
+                if (id == index[len(index)-1]): minus.append(num[i])
+            if len(index) > 0: minima = min(minus)
+            for idx in index:
+                num[idx] -= minima
+                count += minima
+            if (num[i] > 0) and (qq == True): num[i] -= minima
+
+    if (len(num) > 2) and (flag > 0):flag = len([x for x in num if x != 0])-1
+    else: flag-=1
+print(count) 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# 6 Операционные системы Lite
+#Python
+input_string = ''
+
+with open('input.txt', 'r') as reader:
+    for n, line in enumerate(reader,1):
+        input_string += line
+reader.close()
+input_string = input_string.replace("\\n", "\n")
+string = "".join(input_string.rstrip())
+array = [int(x) for x in string.split()]
+num = array[2:]
+grps = (num[i:i + 2] for i in range(0, len(num), 2))
+grps = list(grps)
+del_id = []
+del_count = 0
+for i in range(1, len(grps)):
+    j = i-1
+    while (j>=0):
+        intersection = False
+        for check in range(max(grps[j][0],grps[i][0]), min(grps[j][1],grps[i][1])+1, 1):
+            intersection = True
+            break
+        if (intersection == True):
+            del_id.append(j)
+        j -= 1
+
+del_id = list(set(del_id))
+for i in del_id:
+    grps.pop(i-del_count)
+    del_count += 1
+
+print(len(grps))
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# 7 SNTP
+# Python
+import math
+a = input()
+b = input()
+c = input()
+la = a.split(":")
+lb = b.split(":")
+lc = c.split(":")
+t_start = (3600 * int(la[0])) + (60 * int(la[1])) + int(la[2])
+t_end = (3600 * int(lc[0])) + (60 * int(lc[1])) + int(lc[2])
+# t_start = 3600 * int(la[0]) + 60 * int([la[1]) + int(la[2])
+# t_end = (3600 * int(lc[0])) + (60 * int[lc[1]]) + int(lc[2])
+if t_start > t_end:
+    differ = 86400 - t_start + t_end
+else:
+    differ = t_end - t_start
+if differ % 2 == 0:
+    half_dif = differ / 2
+else:
+    if (differ * 10) // 10 < 5:
+        half_dif = math.floor(differ / 2)
+    else:
+        half_dif = math.ceil(differ / 2)
+tmp = [int(lb[0]), int(lb[1]), int(lb[2])]
+tmp[0] += (half_dif // 3600)
+tmp[1] += ((half_dif % 3600) // 60)
+tmp[2] += ((half_dif % 3600) % 60)
+if tmp[2] > 59:
+    tmp[1] += tmp[2] // 60
+    tmp[2] = tmp[2] % 60
+if tmp[1] > 59:
+    tmp[0] += tmp[1] // 60
+    tmp[1] = tmp[1] % 60
+if tmp[0] > 23:
+    tmp[0] = tmp[0] % 24
+a = int(tmp[0])
+b = int(tmp[1])
+c = int(tmp[2])
+str_h = ""
+str_m = ""
+str_s = ""
+if a == 0:
+    str_h = "00"
+elif 0 < a < 10:
+    str_h = "0" + str(a)
+else:
+    str_h = str(a)
+if b == 0:
+    str_m = "00"
+elif 0 < b < 10:
+    str_m = "0" + str(b)
+else:
+    str_m = str(b)
+if c == 0:
+    str_s = "00"
+elif 0 < c < 10:
+    str_s = "0" + str(c)
+else:
+    str_s = str(c)
+print(str_h, str_m, str_s, sep=":")
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# 8 Минимальный прямоугольник
+# Python
+n = int(input())
+x = []
+y = []
+for i in range(n):
+    s = input()
+    z = s.split(" ")
+    x.append(int(z[0]))
+    y.append(int(z[1]))
+    z = []
+print(min(x), min(y), max(x), max(y), sep=" ")
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# 9. Сумма в прямоугольнике
+# Python
+n, m, k = map(int, input().split())
+a = []
+for i in range(n):
+    a.append(list(map(int, input().split())))
+b = [[0 for j in range(m+1)] for i in range(n+1)]
+
+for i in range(n):
+    for j in range(m):
+        b[i + 1][j + 1] = a[i][j] + b[i][j + 1] + b[i + 1][j] - b[i][j]
+
+x = []
+for i in range(k):
+    i1, j1, i2, j2 = map(int, input().split())
+    c = b[i2][j2] - b[i1 - 1][j2] - b[i2][j1 - 1] + b[i1 - 1][j1 - 1]
+    x.append(c)
+print(*x, sep='\n')
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# 10. Скучная лекция
+# Python
+s = input()
+arr1 = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+arr2 = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+length = len(s)
+s_s = s.lower()
+for i in range(len(s)):
+    tmp2 = 0
+    arr2[int(ord(s[i])) - 97] += (length - i) * (i + 1)
+for j in range(len(arr2)):
+    if arr2[j] != 0:
+        b = j + 97
+        tmp = chr(b)
+        print(tmp, arr2[j], sep=": ")
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# 11. Стек с защитой от ошибок
+# Python
+res = []
+stack = []
+while True:
+    command, *args = input().split()
+    if command == "size":
+        res.append(len(stack))
+    elif command == "back":
+      if len(stack) == 0:
+        res.append('error')
+      else:
+        res.append(stack[-1])
+    elif command == "pop":
+      if len(stack) == 0:
+        res.append('error')
+      else:
+        res.append(stack.pop())
+    elif command == "clear":
+        stack.clear()
+        res.append("ok")
+    elif command == "push":
+        stack.append(int(args[0]))
+        res.append("ok")
+    elif command == "exit":
+        res.append("bye")
+        break
+print(*res, sep='\n')
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#12. Правильная скобочная последовательность
+#Python
+s = input()
+def isValid(s: str) -> str:
+
+    yes = "yes"
+    no = "no"
+    leftSymbols = []
+    for c in s:
+        if c in ['(', '{', '[']:
+            leftSymbols.append(c)
+        elif c == ')' and len(leftSymbols) != 0 and leftSymbols[-1] == '(':
+            leftSymbols.pop()
+        elif c == '}' and len(leftSymbols) != 0 and leftSymbols[-1] == '{':
+            leftSymbols.pop()
+        elif c == ']' and len(leftSymbols) != 0 and leftSymbols[-1] == '[':
+            leftSymbols.pop()
+        else:
+            print(no)
+            return no
+    if leftSymbols == []:
+        print(yes)
+        return yes
+    else:
+        print(no)
+        return no
+isValid(s)
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//13. Постфиксная запись
+//Java
+import java.util.Scanner;
+import java.util.Stack;
+
+public class Main {
+    public static void main(String[]args){
+        Scanner sc = new Scanner(System.in);
+        String str = sc.nextLine();
+        if(str.length() == 0){
+            System.out.println("Error");
+        }
+        char[] arr = str.toCharArray();
+        int k = 0;
+        String[] tokens = new String[arr.length - (arr.length/2)];
+        for (int i = 0; i < str.length(); i++){
+            if(arr[i] != ' '){
+                tokens[k] = arr[i]+"";
+                k++;
+            }
+        }
+        Stack<Integer> stack = new Stack<>();
+        for (String token : tokens) {
+            if (token.equals("+")) {
+                stack.push(stack.pop() + stack.pop());
+            }
+            else if (token.equals("*")) {
+                stack.push(stack.pop() * stack.pop());
+            }
+            else if (token.equals("-")) {
+                int b = stack.pop();
+                int a = stack.pop();
+                stack.push(a - b);
+            }
+            else if (token.equals("/")) {
+                int b = stack.pop();
+                int a = stack.pop();
+                stack.push(a / b);
+            }
+            else {
+                stack.push(Integer.valueOf(token));
+            }
+
+        }
+        System.out.println(stack.pop());
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//14. Сортировка вагонов lite
+//C++
+#include <iostream>
+#include <stack>
+#include <queue>
+ 
+using namespace std;
+ 
+stack<int> s;
+queue<int> op;
+ 
+int main() {
+    int n;
+    cin >> n;
+    int num = 1;
+    for (int i = 0; i < n; i++) {
+        int val;
+        cin >> val;
+        if (!s.empty() && val > s.top()) {
+            cout << "NO";
+            return 0;
+        }
+        op.push(1);
+        s.push(val);
+        while (!s.empty() && s.top() == num) {
+            op.push(2);
+            s.pop();
+            num++;
+        }
+    }
+    int val = op.front();
+    op.pop();
+    int count = 1;
+    cout << "YES";
+    return 0;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//15. Великое Лайнландское переселение
+//C++
+#include <fstream>
+#include <iterator>
+#include <vector>
+#include <stack>
+#include <tuple>
+
+void big_move(std::ifstream &cin, std::ofstream &cout) {
+    std::vector<std::pair<int, int> > cites;
+    std::stack<decltype(cites)::iterator> st;
+    std::string token;
+    int count;
+    cin >> count;
+    cites.reserve(count);
+    while(cin >> token) {
+        cites.emplace_back(std::stoi(token), -1);
+    }
+    for(auto it = cites.begin(); it < cites.end(); it++) {
+        while (!st.empty() && st.top()->first > it->first) {
+            st.top()->second = std::distance(cites.begin(), it);
+            st.pop();
+        }
+        st.emplace(it);
+    }
+    for(auto it = cites.begin(); it < cites.end(); it++) {
+        cout << it->second << " ";
+    }
+    cout << "\n";
+}
+
+
+int main(int argc, char *argv[]) {
+    std::string inFilename = "input.txt";
+    std::string outFilename = "output.txt";
+    if (argc > 1) {
+        inFilename =  argv[1];
+    }
+    if (argc > 2) {
+        outFilename =  argv[2];
+    }
+    std::ifstream cin(inFilename);
+    std::ofstream cout(outFilename);
+
+    big_move(cin, cout);
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#16. Очередь с защитой от ошибок
+#Python
+command = 0
+index_first = 0
+queue = []
+while command != 'exit':
+    command = input()
+    if 'push' in command:
+        if len(queue) - index_first <= index_first:
+            queue = queue[index_first:]
+            index_first = 0
+        queue.append(int(command.split()[-1]))
+        print('ok')
+    elif command == 'pop':
+        if len(queue) - index_first > 0:
+            print(queue[index_first])
+            index_first += 1
+        else:
+            print('error')
+    elif command == 'front':
+        print(queue[index_first]) if len(queue) - index_first > 0 else print('error')
+    elif command == 'size':
+        print(len(queue) - index_first)
+    elif command == 'clear':
+        queue = []
+        index_first = 0
+        print('ok')
+    elif command == 'exit':
+        print('bye')
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# 17. Игра в пьяницу
+# Python
+first = input().split()
+second = input().split()
+n = 0
+
+while first and second:
+    n += 1
+    a, b = first.pop(0), second.pop(0)
+    if a > b and (b, a) != ('0', '9') or (a, b) == ('0', '9'):
+        first += [a, b]
+    else:
+        second += [a, b]
+    if n == 1000000:
+        print('botva')
+        break
+else:
+    print('first' if first else 'second', n)
+    
+    
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# 18. Дек с защитой от ошибок
+# Python
+s = ''
+a = []
+l = 0
+h = 0
+q = []
+while s != 'exit':
+    s = input().split()
+    if s[0] == 'push_front':
+        a.append('ok')
+        q.insert(0, s[1])
+        l += 1
+    elif s[0] == 'push_back':
+        a.append('ok')
+        q.append(s[1])
+        l += 1
+    elif s[0] == 'pop_front':
+        if l == 0:
+            a.append('error')
+        else:
+            a.append(q.pop(0))
+            l -= 1
+    elif s[0] == 'pop_back':
+        if l == 0:
+            a.append('error')
+        else:
+            a.append(q.pop(-1))
+            l -= 1
+    elif s[0] == 'front':
+        if l == 0:
+            a.append('error')
+        else:
+            a.append(q[0])
+    elif s[0] == 'back':
+        if l == 0:
+            a.append('error')
+        else:
+            a.append(q[-1])
+    elif s[0] == 'size':
+        a.append(l)
+    elif s[0] == 'clear':
+        q = []
+        l = 0
+        a.append('ok')
+    elif s[0] == 'exit':
+        a.append('bye')
+        break
+for i in a:
+    print(i)
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# 19. Хипуй
+# Python
+n = int(input())
+arr = []
+for _ in range(n):
+    x = input().split()
+    if len(x) == 1:
+        print(arr[0])
+        arr[0] = arr[len(arr)-1]
+        arr.pop()
+        i = 0
+        while i*2+2 < len(arr):
+            if arr[2*i+1] > arr[i] or arr[2*i+2] > arr[i]:
+                if arr[2*i+1] > arr[2*i+2]:
+                    arr[i], arr[2*i+1] = arr[2*i+1], arr[i]
+                    i = 2*i+1
+                else:
+                    arr[i], arr[2*i+2] = arr[2*i+2], arr[i]
+                    i = 2 * i + 2
+            else:
+                break
+        if 2*i+1 < len(arr) and arr[2 * i + 1] > arr[i]:
+            arr[i], arr[2 * i + 1] = arr[2 * i + 1], arr[i]
+    else:
+        tmp = int(x[1])
+        arr.append(tmp)
+        i = len(arr) - 1
+        while i > 0 and arr[(i-1)//2] < arr[i]:
+            arr[i], arr[(i-1)//2] = arr[(i-1)//2], arr[i]
+            i = (i - 1) // 2
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#20. Пирамидальная сортировка
+#Python
+def heapsort(alist):
+    build_max_heap(alist)
+    for i in range(len(alist) - 1, 0, -1):
+        alist[0], alist[i] = alist[i], alist[0]
+        max_heapify(alist, index=0, size=i)
+
+
+def parent(i):
+    return (i - 1) // 2
+
+
+def left(i):
+    return 2 * i + 1
+
+
+def right(i):
+    return 2 * i + 2
+
+
+def build_max_heap(alist):
+    length = len(alist)
+    start = parent(length - 1)
+    while start >= 0:
+        max_heapify(alist, index=start, size=length)
+        start = start - 1
+
+
+def max_heapify(alist, index, size):
+    l = left(index)
+    r = right(index)
+    if (l < size and alist[l] > alist[index]):
+        largest = l
+    else:
+        largest = index
+    if (r < size and alist[r] > alist[largest]):
+        largest = r
+    if (largest != index):
+        alist[largest], alist[index] = alist[index], alist[largest]
+        max_heapify(alist, largest, size)
+
+
+n = int(input())
+alist = input().split()
+alist = [int(x) for x in alist]
+heapsort(alist)
+for i in range(len(alist)):
+    print(alist[i], end=" ")
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#21. Три единицы подряд
+#Python
+n = int(input())
+f = [0] * 40
+f[1] = 2
+f[2] = 4
+f[3] = 7
+
+i = 4
+while i <= n:
+    f[i] = (f[i - 1] + f[i - 2] + f[i - 3])
+    i += 1
+
+print(f[n])
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * 22 Кузнечик
+ * Дивизион B
+ * Задача 22 Java
+ */
+import java.util.*;
+class Main {
+    public static void main(String[] args)
+    {
+        Scanner con = new Scanner(System.in);
+        int n = con.nextInt();
+        int k = con.nextInt();
+        int dp[] = new int[n + 5];//n+1
+        if (n == 1) {
+            System.out.println(1);
+            return;
+        }else {
+            int i;
+            dp[1] = 1; dp[2] = 1;
+            for(i = 3; i <= k; i++) {
+                //System.out.println(i);
+                dp[i] = 2 * dp[i-1];
+            }
+            for(; i <= n; i++) {
+                dp[i] = 2 * dp[i-1] - dp[i-k-1];
+            }
+            System.out.println(dp[n]);
+        }
+
+        con.close();
+    }
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//23. Калькулятор
+//C++
+#include <iostream>
+#include <vector>
+#include <climits>
+
+int main() {
+  int N;
+  std::cin >> N;
+  std::vector<int> steps(N + 1, INT_MAX);
+  steps[N] = 0;
+  std::vector<int> next_num(N + 1, -1);
+
+  for (int i = N; i > 1; --i) {
+    int s = steps[i] + 1;
+    // 3 * x
+    if (!(i % 3) && steps[i / 3] > s) {
+      steps[i / 3] = s;
+      next_num[i / 3] = i;
+    }
+    // 2 * x
+    if (!(i % 2) && steps[i / 2] > s) {
+      steps[i / 2] = s;
+      next_num[i / 2] = i;
+    }
+    // x + 1
+    if (steps[i - 1] > s) {
+      steps[i - 1] = s;
+      next_num[i - 1] = i;
+    }
+  }
+
+  std::cout << steps[1] << std::endl;
+  for (int i = 1; i != -1; i = next_num[i])
+    std::cout << i << ' ';
+  std::cout << std::endl;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# 24. Покупка билетов
+# Python
+n = int(input())
+a = [0] * 5001
+b = [0] * 5001
+c = [0] * 5001
+for i in range(1,n+1):
+  a[i], b[i], c[i] = map(int, input().split())
+ 
+t = [0] * (n+1)
+t[0] = 0;
+t[1] = a[1];
+if n > 1 : t[2] = min(a[1] + a[2], b[1]);
+ 
+for i in range(3, n+1):
+  t[i] = min(t[i-1] + a[i], t[i-2] + b[i-1], t[i-3] + c[i-2])
+print(t[-1])
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//25. Гвоздики
+//Java
+import java.util.*;
+public class Main {
+    public static void main(String[] args) {
+        Scanner con = new Scanner(System.in);
+        int n = con.nextInt();
+        int[] a = new int[n + 1];
+        int[] dp = new int[n + 1];
+
+        for (int i = 1; i <= n; i++)
+            a[i] = con.nextInt();
+        if (n == 2) {
+            System.out.println(Math.abs(a[1] - a[2]));
+        } else{
+            Arrays.sort(a,1,n+1);
+            dp[2] = a[2] - a[1];
+            dp[3] = a[3] - a[1];
+            for(int i = 4; i <= n; i++)
+                dp[i] = Math.min(dp[i-1],dp[i-2]) + a[i] - a[i-1];
+            System.out.println(dp[n]);
+        }
+        con.close();
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# 26. Самый дешевый путь
+# Python
+n, m = map(int, input().split())
+lst = [[int(it) for it in input().split()] for _ in range(n)]
+ 
+for cln in range(m-2, -1, -1):
+    lst[-1][cln] += lst[-1][cln+1]
+for row in range(n-2, -1, -1):
+    lst[row][-1] += lst[row+1][-1]
+for row in range(n-2, -1, -1):
+    for cln in range(m-2, -1, -1):
+        lst[row][cln] += min(lst[row+1][cln], lst[row][cln+1])
+ 
+print(lst[0][0])
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//27. Вывести маршрут максимальной стоимости
+//C++
+#include <iostream>
+
+#include <algorithm>
+
+using namespace std;
+
+int main()
+
+{
+
+int n(0),m(0);
+
+cin >> n >> m;
+
+int matrix[n][m];
+
+char arr[n][m];
+
+arr[0][0] = '0';
+
+for(int i = 0;i<n;++i){
+
+for(int j = 0;j<m;++j){
+
+cin >> matrix[i][j];
+
+if(!i && !j)continue;
+
+if(!i){
+
+matrix[i][j] += matrix[i][j-1];
+
+arr[i][j] = 'R';
+
+}
+
+if(!j){
+
+matrix[i][j] += matrix[i-1][j];
+
+arr[i][j] = 'D';
+
+}
+
+if(i && j){
+
+matrix[i][j] += max(matrix[i-1][j],matrix[i][j-1]);
+
+if(max(matrix[i-1][j],matrix[i][j-1]) == matrix[i-1][j])arr[i][j] = 'D';
+
+else arr[i][j] = 'R';
+
+}
+
+}
+
+}
+
+cout << matrix[n-1][m-1];
+
+cout << "\n";
+
+string s;
+
+for(int i = n-1;;){
+
+for(int j = m-1;;){
+
+if(arr[i][j] == '0'){
+
+reverse(s.begin(),s.end());
+
+s.erase(0,1);
+
+cout << s << endl;
+
+return 0;
+
+}
+
+s.push_back(arr[i][j]);
+
+s.push_back(' ');
+
+if(arr[i][j] == 'R'){
+
+j -= 1;
+
+continue;
+
+}
+
+if(arr[i][j] == 'D'){
+
+i -= 1;
+
+continue;
+
+}
+
+}
+
+}
+
+cout << endl;
+
+return 0;
+
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//28. Ход конём
+//Java
+import java.util.*;
+public class Main {
+    public static void main(String[] args) {
+        Scanner con = new Scanner(System.in);
+        int n = con.nextInt();
+        int m = con.nextInt();
+        long dp[][] = new long [n+1][m+1];
+        dp[1][1] = 1;
+        for (int i = 2; i <= n; i++)
+            for (int j = 2; j <= m;j ++)
+                dp[i][j] = dp[i-1][j-2] + dp[i-2][j-1];
+        System.out.println(dp[n][m]);
+        con.close();
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//29. Кафе
+// Java
+import java.util.ArrayDeque;
+import java.util.Scanner;
+
+public class E {
+    static int inf = 1000000;
+    static int dp[][];
+    static int a[];
+
+
+    static int DP(int i, int j) {
+        if (j > i) return inf;
+        else {
+            int res;
+            int cost = a[i];
+            if (j <= 0) {
+                if (i >= 1) {
+                    if (cost <= 100) {
+                        int dif = Math.min(DP(i - 1, j + 1), DP(i - 1, j) + cost);
+                        res = dif;
+                    } else {
+                        return DP(i - 1, j + 1);
+                    }
+                } else return 0;
+            } else {
+                if (dp[i][j] != -1) return dp[i][j];
+                if (cost > 100) {
+                    int dif = Math.min(DP(i - 1, j + 1), DP(i - 1, j - 1) + cost);
+                    res = dif;
+                } else {
+                    int dif = Math.min(DP(i - 1, j + 1), DP(i - 1, j) + cost);
+                    res = dif;
+                }
+            }
+            dp[i][j] = res;
+            return res;
+        }
+    }
+
+
+    static void GOODOLDDAYS(ArrayDeque<Integer> used, int i, int j) {
+        if (j < i) {
+            int cost = a[i];
+            if (j <= 0) {
+                if (i >= 1) {
+                    if (cost > 100) {
+                        used.add(i);
+                        GOODOLDDAYS(used, i - 1, j + 1);
+                    } else {
+                        boolean addi = (DP(i, j) == DP(i - 1, j + 1));
+                        if (addi) {
+                            used.add(i);
+                            GOODOLDDAYS(used, i - 1, j + 1);
+                        } else GOODOLDDAYS(used, i - 1, j);
+                    }
+                }
+            } else {
+                if (cost <= 100) {
+                    boolean addi = (DP(i - 1, j + 1) == DP(i, j));
+                    if (addi) {
+                        used.add(i);
+                        GOODOLDDAYS(used, i - 1, j + 1);
+                    } else {
+                        GOODOLDDAYS(used, i - 1, j);
+                    }
+                } else {
+                    boolean addi = (DP(i - 1, j + 1) == DP(i, j));
+                    if (addi) {
+                        used.add(i);
+                        GOODOLDDAYS(used, i - 1, j + 1);
+                    } else {
+                        GOODOLDDAYS(used, i - 1, j - 1);
+                    }
+                }
+            }
+        }
+    }
+
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int n = scanner.nextInt();
+        int k1 = 0;
+        int k2 = 0;
+        a = new int[n + 1];
+        for (int i = 1; i <= n; i++) a[i] = scanner.nextInt();
+        dp = new int[n + 1][n + 2];
+        for (int i = 0; i <= n; i++) {
+            for (int j = 0; j <= n + 1; j++)
+                dp[i][j] = -1;
+        }
+
+        int ans = inf;
+
+        for (int i = 0; i <= n; i++) {
+            if (ans >= DP(n, i)) {
+                ans = DP(n, i);
+                k1 = i;
+            }
+        }
+
+        System.out.println(ans);
+
+        ArrayDeque<Integer> used = new ArrayDeque<>();
+
+        GOODOLDDAYS(used, n, k1);
+
+        k2 = used.size();
+
+        System.out.println(k1 + " " + k2);
+
+        while (!used.isEmpty()) {
+            System.out.print(used.removeLast() + "\n");
+        }
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#30. НОП с восстановлением ответа
+# Python
+n = int(input())
+A = input().split(" ")
+m = int(input())
+B = input().split(" ")
+F = [[0] * (m + 1) for i in range(n + 1)]
+for i in range(1, n + 1):
+    for j in range(1, m + 1):
+        if int(A[i - 1]) == int(B[j - 1]):
+            F[i][j] = F[i - 1][j - 1] + 1
+        else:
+            F[i][j] = max(F[i - 1][j], F[i][j - 1])
+#print(F[n][m])
+Ans = []
+i = n
+j = m
+while i > 0 and j > 0:
+    if int(A[i - 1]) == int(B[j - 1]):
+        Ans.append(A[i - 1])
+        i -= 1
+        j -= 1
+    elif int(F[i - 1][j]) == int(F[i][j]):
+        i -= 1
+    else:
+        j -= 1
+Ans = Ans[::-1]
+print(" ".join(map(str, Ans)))
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# 31. Поиск в глубину
+# Python
+from collections import deque
+
+def bfs(start, visited, graph):
+    queue = deque([start])
+    visited[start] = True
+    component = [start]
+    while queue:
+        vertex = queue.popleft()
+        for neighbor in graph[vertex]:
+            if not visited[neighbor]:
+                visited[neighbor] = True
+                queue.append(neighbor)
+                component.append(neighbor)
+    return component
+
+n, m = map(int, input().split())
+graph = [[] for _ in range(n)]
+for _ in range(m):
+    a, b = map(int, input().split())
+    graph[a-1].append(b-1)
+    graph[b-1].append(a-1)
+
+visited = [False] * n
+component = bfs(0, visited, graph)
+print(len(component))
+print(" ".join(str(v+1) for v in sorted(component)))
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# 32. Компоненты связности
+# Python
+# Чтение входных данных
+n, m = map(int, input().split())
+graph = [set() for _ in range(n)]
+for _ in range(m):
+    a, b = map(int, input().split())
+    graph[a-1].add(b-1)
+    graph[b-1].add(a-1)
+
+# Обход графа в глубину
+visited = [False] * n
+components = []
+stack = []
+for i in range(n):
+    if not visited[i]:
+        component = []
+        stack.append(i)
+        while stack:
+            node = stack.pop()
+            if not visited[node]:
+                visited[node] = True
+                component.append(node)
+                stack.extend(graph[node])
+        components.append(component)
+
+# Вывод результатов
+print(len(components))
+for component in components:
+    print(len(component))
+    print(*map(lambda x: x+1, component))
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# 33. Списывание
+# Python
+from collections import deque
+
+def can_divide_students(n, edges):
+    graph = [[] for _ in range(n)]
+    for u, v in edges:
+        graph[u - 1].append(v - 1)
+        graph[v - 1].append(u - 1)
+
+    color = [None] * n
+
+    for i in range(n):
+        if color[i] is None:
+            color[i] = 0
+            q = deque([i])
+            while q:
+                u = q.popleft()
+                for v in graph[u]:
+                    if color[v] is None:
+                        color[v] = 1 - color[u]
+                        q.append(v)
+                    elif color[v] == color[u]:
+                        return "NO"
+
+    return "YES"
+
+n, m = map(int, input().split())
+edges = [tuple(map(int, input().split())) for _ in range(m)]
+print(can_divide_students(n, edges))
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//34. Топологическая сортировка
+//Java
+import java.util.*;
+
+import java.io.*;
+
+ 
+
+public class Main
+
+{
+
+  static ArrayList<ArrayList<Integer>> g;
+
+  static ArrayList<Integer> top = new ArrayList<Integer>();
+
+  static int used[];
+
+  static int n, m, flag = 0;
+
+   
+
+  static void dfs(int v)
+
+  {
+
+    used[v] = 1;
+
+    for(int i = 0; i < g.get(v).size(); i++)
+
+    {
+
+      int to = g.get(v).get(i);
+
+      if (used[to] == 1) flag = 1;
+
+      if (used[to] == 0) dfs(to);
+
+    }
+
+    used[v] = 2;
+
+    top.add(v);
+
+  }
+
+   
+
+  public static void main(String[] args)
+
+  {
+
+    FastScanner con = new FastScanner(System.in);
+
+    n = con.nextInt();
+
+    m = con.nextInt();
+
+    g = new ArrayList<ArrayList<Integer>>();
+
+    used = new int[n+1];
+
+     
+
+    for (int i = 0; i <= n; i++)
+
+      g.add(new ArrayList<Integer>());
+
+ 
+
+    for (int i = 0; i < m; i++)
+
+    {
+
+      int a = con.nextInt();
+
+      int b = con.nextInt();    
+
+      g.get(a).add(b);
+
+    }
+
+     
+
+    for(int i = 1; i <= n; i++)
+
+      if (used[i] == 0) dfs(i);
+
+     
+
+    if (flag == 1) System.out.println("-1");
+
+    else
+
+      for(int i = top.size() - 1; i >= 0; i--)
+
+        System.out.print(top.get(i) + " ");
+
+    System.out.println();
+
+  }
+
+}
+
+ 
+
+class FastScanner
+
+{
+
+  BufferedReader br;
+
+  StringTokenizer st;
+
+ 
+
+  public FastScanner(InputStream inputStream)
+
+  {
+
+    br = new BufferedReader(new InputStreamReader(inputStream));
+
+    st = new StringTokenizer("");
+
+  }
+
+ 
+
+  public String next()
+
+  {
+
+    while (!st.hasMoreTokens())
+
+    {
+
+      try
+
+      {
+
+        st = new StringTokenizer(br.readLine());
+
+      } catch (Exception e)
+
+      {
+
+        return null;
+
+      }
+
+    }
+
+    return st.nextToken();
+
+  }
+
+ 
+
+  public int nextInt()
+
+  {
+
+    return Integer.parseInt(next());
+
+  }
+
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//35. Поиск цикла
+// Not make this(
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# 36. Длина кратчайшего пути
+# Python
+import heapq
+
+# считываем данные
+n = int(input())
+adj_matrix = [list(map(int, input().split())) for _ in range(n)]
+start, end = map(int, input().split())
+
+# инициализируем массив расстояний и очередь с приоритетами
+dist = [float('inf')] * n
+dist[start-1] = 0
+queue = [(0, start-1)]
+
+while queue:
+    # извлекаем вершину с наименьшим расстоянием
+    d, u = heapq.heappop(queue)
+
+    # если мы достигли конечной вершины, то выходим из цикла
+    if u == end-1:
+        break
+
+    # просматриваем все соседние вершины
+    for v in range(n):
+        if adj_matrix[u][v] == 1:  # если есть ребро между вершинами
+            new_dist = d + 1  # увеличиваем расстояние на 1
+            if new_dist < dist[v]:  # если полученное расстояние меньше, чем текущее
+                dist[v] = new_dist  # обновляем значение расстояния
+                heapq.heappush(queue, (new_dist, v))  # добавляем вершину в очередь
+
+# выводим результат
+print(dist[end-1] if dist[end-1] != float('inf') else -1)
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# 37. Путь в графе
+# Python
+import heapq
+
+
+def dijkstra(adj, start, end):
+    pq = [(0, start, [])]
+    visited = set()
+    while pq:
+        (cost, v, path) = heapq.heappop(pq)
+        if v not in visited:
+            path = path + [v]
+            if v == end:
+                return len(path) - 1, path
+            visited.add(v)
+            for (next_v, weight) in adj[v].items():
+                heapq.heappush(pq, (cost + weight, next_v, path))
+    return -1, []
+
+
+n = int(input())
+adj = {}
+for i in range(n):
+    adj[i] = {}
+    row = list(map(int, input().split()))
+    for j, weight in enumerate(row):
+        if weight == 1:
+            adj[i][j] = 1
+start, end = map(int, input().split())
+
+length, path = dijkstra(adj, start - 1, end - 1)
+
+print(length)
+if length > 0:
+    print(" ".join(str(x + 1) for x in path))
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# 38. Блохи
+# Python
+import sys
+n, m, s, t, q = map(int, input().split())
+blohs = []
+for i in range(q):
+    x, y = map(int, input().split())
+    blohs.append((x, y))
+
+if s < 1 or s > n or t < 1 or t > m:
+    print("-1")
+    sys.exit()
+
+dist = [[-1 for j in range(m)] for i in range(n)]
+dist[s-1][t-1] = 0
+
+queue = [(s-1, t-1)]
+while queue:
+    x, y = queue.pop(0)
+    for dx, dy in [(2, 1), (1, 2), (-2, 1), (-1, 2), (2, -1), (1, -2), (-2, -1), (-1, -2)]:
+        nx, ny = x + dx, y + dy
+        if nx >= 0 and nx < n and ny >= 0 and ny < m and dist[nx][ny] == -1:
+            dist[nx][ny] = dist[x][y] + 1
+            queue.append((nx, ny))
+total_dist = 0
+for x, y in blohs:
+    if dist[x-1][y-1] == -1:
+        print("-1")
+        sys.exit()
+    total_dist += dist[x-1][y-1]
+
+print(total_dist)
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# 39. Путь спелеолога
+# Python
+from collections import deque
+
+n = int(input())
+cave = []
+for _ in range(n):
+    level = []
+    input() 
+    for _ in range(n):
+        row = input().strip()
+        level.append(row)
+        if 'S' in row:
+            start = (len(cave), len(level) - 1, row.index('S'))
+    cave.append(level)
+
+def bfs(start):
+    queue = deque([(start, 0)])
+    visited = set([start])
+    while queue:
+        (x, y, z), steps = queue.popleft()
+        if cave[x][y][z] == '.' and x == 0:
+            return steps
+        for dx, dy, dz in [(1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)]:
+            nx, ny, nz = x + dx, y + dy, z + dz
+            if 0 <= nx < n and 0 <= ny < n and 0 <= nz < n and cave[nx][ny][nz] == '.' and (nx, ny, nz) not in visited:
+                visited.add((nx, ny, nz))
+                queue.append(((nx, ny, nz), steps + 1))
+
+print(bfs(start))
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//40. Метро
+//C++
+
+#include <algorithm>
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <cstring>
+using namespace std;
+
+const int INF = 1e9;
+
+int main() {
+    int n, m;
+    cin >> n >> m;
+    vector<vector<int>> lines(m);
+    for (int i = 0; i < m; ++i) {
+        int p;
+        cin >> p;
+        for (int j = 0; j < p; ++j) {
+            int t;
+            cin >> t;
+            lines[i].push_back(t);
+        }
+    }
+    vector<vector<int>> mx(m, vector<int>(m, 0));
+    for (int i = 0; i < m; i++) {
+        for (int j = i + 1; j < m; j++) {
+            for (int x : lines[i]) {
+                if (find(lines[j].begin(), lines[j].end(), x) != lines[j].end()) {
+                    mx[i][j] = 1;
+                    mx[j][i] = 1;
+                    break;
+                }
+            }
+        }
+    }
+    int a, b;
+    cin >> a >> b;
+    --a, --b;
+    if (a == b) {
+        cout << 0 << endl;
+        return 0;
+    }
+    vector<int> dist(m, INF);
+    queue<int> q;
+    for (int i = 0; i < m; i++) {
+        if (find(lines[i].begin(), lines[i].end(), a + 1) != lines[i].end()) {
+            dist[i] = 0;
+            q.push(i);
+        }
+    }
+    while (!q.empty()) {
+        int v = q.front();
+        q.pop();
+        for (int u = 0; u < m; u++) {
+            if (mx[v][u] && dist[u] > dist[v] + 1) {
+                dist[u] = dist[v] + 1;
+                q.push(u);
+            }
+        }
+    }
+    int ans = INF;
+    for (int i = 0; i < m; i++) {
+        if (find(lines[i].begin(), lines[i].end(), b + 1) != lines[i].end()) {
+            ans = min(ans, dist[i]);
+        }
+    }
+    if (ans == INF) {
+        cout << -1 << endl;
+    } else {
+        cout << ans << endl;
+    }
+    return 0;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+

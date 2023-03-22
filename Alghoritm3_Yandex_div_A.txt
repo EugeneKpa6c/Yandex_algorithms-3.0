@@ -1,0 +1,1065 @@
+Тренировка по Алгоритмам 3.0 от Яндекса - Дивизион A
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+#1 Гистограмма
+#Python
+import sys
+def zadacha(s):
+     slov = {}
+     max_number = 0 
+     for i in s:
+          if i != ' ':
+               if i not in slov:
+                    slov[i] = 0 
+               slov[i] += 1
+               max_number = max(max_number, slov[i])
+     sorted_slov = sorted(slov.keys())
+     for i in range(max_number, 0 , -1):
+          for j in sorted_slov:
+               if slov[j] >= i:
+                    print('#', end='')
+               else:
+                    print(' ', end='')
+          print()
+     print(''.join(sorted_slov))
+a = ''
+for line in sys.stdin:
+     for word in line.split():
+          a += word
+zadacha(a)
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#2 Красивая строка
+#Python
+k = int(input())
+s = input()
+
+start = 0
+frequency_map = {}
+max_frequency = 0
+longest_substring_length = 0
+for end in range(len(s)):
+    frequency_map[s[end]] = frequency_map.get(s[end], 0) + 1
+    max_frequency = max(max_frequency, frequency_map[s[end]])
+    is_valid = (end + 1 - start - max_frequency <= k)
+    if not is_valid:
+        frequency_map[s[start]] -= 1
+        start += 1
+    longest_substring_length = end + 1 - start
+print(longest_substring_length)
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# 3 Коллекционер Диего
+# Python
+input_string = ''
+
+with open('input.txt', 'r') as reader:
+    for n, line in enumerate(reader,1):
+        input_string += line
+reader.close()
+
+input_string = input_string.replace("\\n", "\n")
+
+string = "".join(input_string.rstrip())
+array = [int(x) for x in string.split()]
+
+start = array[0]
+start_idx = 0
+stop = array[start + 1]
+stop_idx = start + 1
+
+start_array = array[1:start+1]
+stop_array = array[stop_idx:]
+
+counter = 0
+remove_count = 0
+
+len_start = len(start_array)
+start_array = list(set(start_array))
+start_array.sort()
+len_diff = len_start - len(start_array)
+
+stop_idx -= len_diff
+start -= len_diff
+
+array[0] = start
+del array[1:]
+array += start_array + stop_array
+
+def search(list, low, high, value):
+    mid = (low + high) // 2
+
+    if (((value < list[mid]) or (value == list[mid])) and (value > list[mid-1])):
+        return mid
+    if (low == high == 0): return mid
+    if low > high:
+        return False
+    if (value < list[mid]):
+        return search(list, low, mid - 1, value)
+    else:
+        return search(list, mid + 1, high, value)
+
+bag = []
+for i in stop_array[1:]:
+    bin_search = search(start_array, 0 ,len(start_array)-1, i)
+    if (bin_search != False): bag.append(bin_search)
+    if (bin_search == False) and (i <= min(start_array)): bag.append(0)
+    if (bin_search == False) and (i > max(start_array)): bag.append(len(start_array))
+for i in range(len(bag)):
+    print(bag[i])
+ 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+# 4 Контрольная работа
+# Python
+n, k, row, column = int(input()), int(input()), int(input()), int(input())
+pos1 = (row - 1) * 2 + column - k
+pos2 = (row - 1) * 2 + column + k
+row1 = (pos1 + 1) // 2
+row2 = (pos2 + 1) // 2
+
+if pos1 > 0 and (pos2 > n or abs(row - row1) < abs(row - row2)):
+    print(row1, 2 - pos1 % 2)
+elif pos2 <= n:
+    print(row2, 2 - pos2 % 2)
+else:
+    print(-1)
+    
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+# 5 Хорошая строка
+# Python   
+input_string = ''
+
+with open('input.txt', 'r') as reader:
+    for n, line in enumerate(reader,1):
+        input_string += line
+reader.close()
+
+input_string = input_string.replace("\\n", "\n")
+
+string = "".join(input_string.rstrip())
+array = [int(x) for x in string.split()]
+
+num = array[1:]
+count = 0
+
+if len(num) < 2:
+    flag = 0
+else:
+    flag = max(num)
+while flag > 0:
+    for i in range(len(num)):
+        qq = False
+        i = 0
+        j = i+1
+        if (j <len(num)-1):value = num[j]
+        else:
+            j = len(num)-1
+            value = num[j]
+        non_zero = next((i for i, x in enumerate(num) if x), -1)
+        if (num[i] == 0):
+                i = non_zero
+                j = i+1
+        if (len(num)>2) and (i<len(num)-1):
+            if (num[i+1] == 0):
+                num[i] = 0
+                i = i+1
+                j = i
+        if (len(num)<3):
+            count = min(num)*(len(num)-1)
+            flag = 0
+        else:
+            index = []
+            minus = []
+            while (j<len(num)) and (num[j] > 0):
+                if (num[i] >0) and (num[j] >0):
+                    index.append(j)
+                j += 1
+                qq = True
+            for id in index:
+                minus.append(num[id])
+                if (id == index[len(index)-1]): minus.append(num[i])
+            if len(index) > 0: minima = min(minus)
+            for idx in index:
+                num[idx] -= minima
+                count += minima
+            if (num[i] > 0) and (qq == True): num[i] -= minima
+
+    if (len(num) > 2) and (flag > 0):flag = len([x for x in num if x != 0])-1
+    else: flag-=1
+print(count) 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# 6 Операционные системы Lite
+#Python
+input_string = ''
+
+with open('input.txt', 'r') as reader:
+    for n, line in enumerate(reader,1):
+        input_string += line
+reader.close()
+input_string = input_string.replace("\\n", "\n")
+string = "".join(input_string.rstrip())
+array = [int(x) for x in string.split()]
+num = array[2:]
+grps = (num[i:i + 2] for i in range(0, len(num), 2))
+grps = list(grps)
+del_id = []
+del_count = 0
+for i in range(1, len(grps)):
+    j = i-1
+    while (j>=0):
+        intersection = False
+        for check in range(max(grps[j][0],grps[i][0]), min(grps[j][1],grps[i][1])+1, 1):
+            intersection = True
+            break
+        if (intersection == True):
+            del_id.append(j)
+        j -= 1
+
+del_id = list(set(del_id))
+for i in del_id:
+    grps.pop(i-del_count)
+    del_count += 1
+
+print(len(grps))
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# 7 SNTP
+# Python
+import math
+a = input()
+b = input()
+c = input()
+la = a.split(":")
+lb = b.split(":")
+lc = c.split(":")
+t_start = (3600 * int(la[0])) + (60 * int(la[1])) + int(la[2])
+t_end = (3600 * int(lc[0])) + (60 * int(lc[1])) + int(lc[2])
+# t_start = 3600 * int(la[0]) + 60 * int([la[1]) + int(la[2])
+# t_end = (3600 * int(lc[0])) + (60 * int[lc[1]]) + int(lc[2])
+if t_start > t_end:
+    differ = 86400 - t_start + t_end
+else:
+    differ = t_end - t_start
+if differ % 2 == 0:
+    half_dif = differ / 2
+else:
+    if (differ * 10) // 10 < 5:
+        half_dif = math.floor(differ / 2)
+    else:
+        half_dif = math.ceil(differ / 2)
+tmp = [int(lb[0]), int(lb[1]), int(lb[2])]
+tmp[0] += (half_dif // 3600)
+tmp[1] += ((half_dif % 3600) // 60)
+tmp[2] += ((half_dif % 3600) % 60)
+if tmp[2] > 59:
+    tmp[1] += tmp[2] // 60
+    tmp[2] = tmp[2] % 60
+if tmp[1] > 59:
+    tmp[0] += tmp[1] // 60
+    tmp[1] = tmp[1] % 60
+if tmp[0] > 23:
+    tmp[0] = tmp[0] % 24
+a = int(tmp[0])
+b = int(tmp[1])
+c = int(tmp[2])
+str_h = ""
+str_m = ""
+str_s = ""
+if a == 0:
+    str_h = "00"
+elif 0 < a < 10:
+    str_h = "0" + str(a)
+else:
+    str_h = str(a)
+if b == 0:
+    str_m = "00"
+elif 0 < b < 10:
+    str_m = "0" + str(b)
+else:
+    str_m = str(b)
+if c == 0:
+    str_s = "00"
+elif 0 < c < 10:
+    str_s = "0" + str(c)
+else:
+    str_s = str(c)
+print(str_h, str_m, str_s, sep=":")
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# 8 Минимальный прямоугольник
+# Python
+n = int(input())
+x = []
+y = []
+for i in range(n):
+    s = input()
+    z = s.split(" ")
+    x.append(int(z[0]))
+    y.append(int(z[1]))
+    z = []
+print(min(x), min(y), max(x), max(y), sep=" ")
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# 9. Сумма в прямоугольнике
+# Python
+n, m, k = map(int, input().split())
+a = []
+for i in range(n):
+    a.append(list(map(int, input().split())))
+b = [[0 for j in range(m+1)] for i in range(n+1)]
+
+for i in range(n):
+    for j in range(m):
+        b[i + 1][j + 1] = a[i][j] + b[i][j + 1] + b[i + 1][j] - b[i][j]
+
+x = []
+for i in range(k):
+    i1, j1, i2, j2 = map(int, input().split())
+    c = b[i2][j2] - b[i1 - 1][j2] - b[i2][j1 - 1] + b[i1 - 1][j1 - 1]
+    x.append(c)
+print(*x, sep='\n')
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# 10. Скучная лекция
+# Python
+s = input()
+arr1 = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+arr2 = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+length = len(s)
+s_s = s.lower()
+for i in range(len(s)):
+    tmp2 = 0
+    arr2[int(ord(s[i])) - 97] += (length - i) * (i + 1)
+for j in range(len(arr2)):
+    if arr2[j] != 0:
+        b = j + 97
+        tmp = chr(b)
+        print(tmp, arr2[j], sep=": ")
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# 11. Конвейер
+# Python
+a = int(input())
+b = []
+result = []
+stack = []
+for i in range(a):
+    b.append(list(map(float,input().split()))[1:])
+for i in b:
+    stack = []
+    e = sorted(i)
+    while i or stack:
+        if not i and stack:
+            if stack[-1] != e[0]:
+                break
+        if stack:
+            if stack[-1] == e[0]:
+                e.pop(0)
+                stack.pop(-1)
+            elif i[0] == e[0]:
+                e.pop(0)
+                i.pop(0)
+            else:
+                stack.append(i[0])
+                i.pop(0)
+        elif i[0] == e[0]:
+            e.pop(0)
+            i.pop(0)
+        else:
+            stack.append(i[0])
+            i.pop(0)
+    if len(e) == 0:
+        result.append(1)
+    else:
+        result.append(0)
+for i in result:
+    print(i)
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# 12. Значение арифметического выражения
+# Python
+st = input()
+ln = len(st)
+wr = "WRONG"
+def not_wrong(st: str):
+    if len(st) == 0:
+        return False
+    opened_br = 0
+    closed_br = 0
+    for i in range(ln):
+        if st[i].isalpha():
+            return False
+        if i != 0 and i != (ln - 1) and st[i] == " " and st[i - 1].isdigit() and st[i + 1].isdigit():
+            return False
+        if st[i] == "(":
+            opened_br += 1
+        elif st[i] == ")":
+            if opened_br == 0:
+                closed_br += 1
+            elif opened_br != 0:
+                opened_br -= 1
+    if opened_br + closed_br != 0:
+        return False
+    return True
+
+
+if not_wrong(st):
+    try:
+        print(eval(st))
+    except Exception:
+        print(wr)
+else:
+    print(wr)
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//13. Значение логического выражения
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# 14. Гистограмма и прямоугольник
+# Python
+str = input()
+height = [int(i) for i in str.split()]
+height[0] = 0
+height.append(0)
+stack = [-1]
+ans = 0
+for i in range(len(height)):
+    while height[i] < height[stack[-1]]:
+        h = height[stack.pop()]
+        w = i - stack[-1] - 1
+        ans = max(ans, h * w)
+    stack.append(i)
+height.pop()
+print(ans)
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# 15. Поврежденный XML
+# Python
+def checkTags(xml):
+    if xml[0] != '<' or xml[-1] != '>':
+        return 0
+    opening_tag = []
+    i = 0
+    while True:
+        if i == len(xml):
+            break
+        if xml[i] != '<':
+            return 0
+        i += 1
+        closing_tag = 0
+        if xml[i] == '/':
+            closing_tag = 1
+            i += 1
+        if not ('a' <= xml[i] and xml[i] <= 'z'):
+            return 0
+        tag = xml[i]
+        i += 1
+        while 'a' <= xml[i] and xml[i] <= 'z':
+            tag += xml[i]
+            i += 1
+        if xml[i] != '>':
+            return 0
+        i += 1
+        if closing_tag == 0:
+            opening_tag.append(tag)
+        else:
+            if len(opening_tag) == 0:
+                return 0
+            if opening_tag[-1] != tag:
+                return 0
+            del opening_tag[-1]
+    return len(opening_tag) == 0
+
+
+def changeSymbol():
+    for i in range(len(string)):
+        temp = string.copy()
+        temp[i] = j
+        if checkTags(temp):
+            result.append(temp)
+
+
+string = list(input())
+opened_chevron = string.count('<')
+closed_chevron = string.count('>')
+slashes = string.count('/')
+letters = {}
+result = []
+for i in string:
+    letters[i] = letters.get(i, 0) + 1
+for j in '<>/qwertyuiopasdfghjklzxcvbnm':
+    if j == '<' and opened_chevron % 2:
+        changeSymbol()
+
+    elif j == '>' and closed_chevron % 2:
+        changeSymbol()
+
+    elif j == '/' and closed_chevron // 2 != slashes:
+        changeSymbol()
+
+    elif j in letters and letters[j] % 2:
+        changeSymbol()
+
+for i in result:
+    print(''.join(i))
+    break
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# 16. Минимум на отрезке
+# Python
+from collections import deque
+def mininslidingwindow(A, k):
+    mins = []
+    deq = deque()
+    for i in range(len(A)):
+        if (len(deq) > 0) and (deq[0] <= i - k):
+            deq.popleft() 
+        while len(deq) > 0 and A[deq[-1]] >= A[i]:
+            deq.pop()
+        deq.append(i)
+        if i >= k - 1:
+            mins.append(A[deq[0]]) 
+    return mins
+n, k = list(map(int, input().split()))
+arr = list(map(int, input().split()))
+print(str(mininslidingwindow(arr, k)).replace('[', '').replace(']', '').replace(',', '').replace(' ', '\n'))
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# 17. Гоблины и шаманы
+# Python
+import collections
+
+dq = collections.deque()
+qd = collections.deque()
+result = []
+for i in range(int(input())):
+     a = input()
+     if a[0] == '+':
+          b = a[2:]
+          dq.appendleft(b)
+     elif a[0] == '*':
+          if len(dq) >= len(qd):
+               b = (len(dq) + len(qd)) // 2 - len(qd)
+               if (len(dq)+len(qd)) % 2 != 0:
+                    b +=1 
+               for i in range(b):
+                    qd.appendleft(dq.pop())
+               dq.append(a[2:])
+          else:
+               b = (len(dq) + len(qd)) // 2 - len(dq)
+               if (len(dq)+len(qd)) % 2 != 0:
+                    b +=1 
+               for i in range(b):
+                    dq.append(qd.popleft())
+               dq.append(a[2:])
+               
+     else:
+          if qd:
+               result.append(qd.pop())
+          else:
+               result.append(dq.pop())
+for i in result:
+     print(i)
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//18. Тупики
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# 19. Коммерческий калькулятор
+# Python
+import heapq
+s = input()# первое число на не нужен 
+s = list(map(int,input().split()))# числа нужные нам
+heapq.heapify(s)
+procent = 0 
+
+while len(s) > 1 :# цикл основной для расчёта процента 
+     c = heapq.heappop(s) + heapq.heappop(s) 
+     procent += c * 5 /100
+     heapq.heappush(s,c)
+# надо , что бы было 2 числа после запятой 
+if len(str(procent).split('.')[1]) < 2:
+     print(format(procent, '.2f'))
+else:
+     procent = round(procent,2)
+     if len(str(procent).split('.')[1]) < 2:
+          print(format(procent, '.2f'))
+     else:
+          print(procent)
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//20. Машинки
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//21. Разложение в сумму кубов
+//C++
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
+#include <stack>
+#include <queue>
+#include <deque>
+#include <set>
+#include <map>
+#include <string>
+#include <cstring>
+#include <vector>
+#include <algorithm>
+#include <utility>
+#include <cctype>
+#include <iterator>
+#include <cmath>
+ 
+#define x first
+#define y second
+#define pb push_back
+#define mp make_pair
+#define ins insert
+ 
+using namespace std;
+typedef long long ll;
+typedef long double ld;
+typedef pair<ll, ll> pii;
+typedef pair<ld, ld> pdd;
+ 
+const ll maxn = 1000009;
+ 
+ll n, m, i, j, k;
+vector<ll> p;
+int f[maxn];
+ 
+inline void test()
+{
+    f[1] = 1; f[2] = 2; f[3] = 3;
+    for (ll i = 1; i <= 100; ++i)
+        p.pb(i*i*i);
+    cin >> n;
+    for (ll i = 4; i <= n; ++i)
+    {
+        f[i] = 1000000009;
+        for (ll j = 0; j<p.size(); ++j)
+        {
+            if (i >= p[j] && f[i] > f[i - p[j]] + 1)
+                f[i] = f[i - p[j]] + 1;
+        }
+    }
+    cout << f[n];
+    //system("pause");
+}
+ 
+ 
+int main()
+{
+    //freopen("input.txt","r",stdin);
+    //freopen("output.txt","w",stdout);
+    //ios_base::sync_with_stdio(0);
+    //cin.tie(0);
+    test();
+    //system("pause");
+    return 0;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//22. НВП с восстановлением ответа
+//Java
+import java.util.*;
+public class Main {
+    public static void main(String[] args) {
+        Scanner con = new Scanner(System.in);
+        int n = con.nextInt();
+        int x[] = new int[n];
+        List<Integer> answer = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            x[i] = con.nextInt();
+        }
+        int lis[] = new int[n];
+        int len = 0;
+        int count = 0;
+        for (int i = 0; i < n; i++) {
+            int pos = Arrays.binarySearch(lis, 0, len, x[i]);
+            if(pos < 0) pos = - (pos + 1);
+            lis[pos] = x[i];
+            //System.out.println(lis[pos]);
+
+            if(pos == len) {
+                if (count == 0){
+                    System.out.print(lis[pos]);
+                    count++;
+                } else {
+                    System.out.print(" "+lis[pos]);
+                    count++;
+                }
+                len++;
+            }
+        }
+        //System.out.println(len);
+        con.close();
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#23. Количество треугольников
+# Python
+import math
+n = int(input())
+count = 0
+count += (n * (n + 2) * ((2 * n) + 1)) / 8
+print(math.floor(count))
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//24 Буратино
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//25 Увлекательная игра
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# 26. Ход конём - 2
+# Python
+n, m = map(int, input().split())
+a = []
+for i in range(n):
+    a.append(list([-1 for j in range(m)]))
+a[0][0] = 1
+def sol(i, j):
+    if i >= 0 and j >= 0 and i < n and j < m:
+        if a[i][j] == -1:
+            a[i][j] = sol(i-2, j-1)+sol(i-2, j+1)+sol(i-1, j-2)+sol(i+1, j-2)
+    else:
+        return 0
+    return a[i][j]
+print(sol(n-1, m-1))
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//27. Расстояние по Левенштейну
+//Java
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
+
+public class D {
+
+    static int minimin(int a, int b, int c) {
+        return Math.min(Math.min(a, b), c);
+    }
+
+    static int meme(char i, char j) {
+        if (i == j) return 0;
+        else return 1;
+    }
+
+    static int HereFishyFishy(String s1, String s2) {
+        int m = s1.length();
+        int n = s2.length();
+        int dp[][] = new int[m + 1][n + 1];
+        for (int i = 0; i <= m; i++) {
+            for (int j = 0; j <= n; j++) {
+                if (i == 0 && j == 0) {
+                    dp[i][j] = 0;
+                    continue;
+                }
+                if (i == 0 && j > 0) {
+                    dp[i][j] = j;
+                    continue;
+                }
+                if (i > 0 && j == 0) {
+                    dp[i][j] = i;
+                    continue;
+                }
+                if (j > 0 && i > 0) {
+                    dp[i][j] = minimin(dp[i][j - 1] + 1, dp[i - 1][j] + 1, dp[i - 1][j - 1] + meme(s1.charAt(i - 1), s2.charAt(j - 1)));
+                }
+            }
+        }
+        return dp[m][n];
+    }
+
+    public static void main(String[] args) throws IOException {
+        Scanner scanner = new Scanner(new File("input.txt"));
+        FileWriter fileWriter = new FileWriter(new File("output.txt"));
+
+        String s1 = scanner.nextLine();
+        String s2 = scanner.nextLine();
+
+        fileWriter.write(HereFishyFishy(s1, s2) + "");
+        fileWriter.flush();
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# 28. Космический мусорщик
+# Python
+directions = [-1] * (1 + ord('Z'))
+counts = []
+count = []
+chars = ['N', 'S', 'W', 'E', 'U', 'D']
+for i in range(len(chars)):
+    directions[ord(chars[i])] = i
+for i in range(len(chars)):
+    counts.append([0] * len(chars))
+for i in range(len(chars)):
+    strr = input()
+    for cc in strr:
+        counts[i][directions[ord(cc)]] += 1
+direction_result, parametr_result = map(str, input().split())
+parametr_result = int(parametr_result)
+for i in range(1 + parametr_result):
+    count.append([1] * len(chars))
+for par in range(2, parametr_result + 1):
+    for parentDir in range(len(chars)):
+        for chilDir in range(len(chars)):
+            res = count[par - 1][chilDir] * counts[parentDir][chilDir]
+            count[par][parentDir] += res
+print(count[parametr_result][directions[ord(direction_result)]])
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# 29. Движение по полосам
+# Python
+m, n = map(int, input().split())
+dp = []
+for i in range(n):
+    dp.append([0] * m)
+dp[0][0] = 1
+for i in range(n):
+    for j in range(m):
+        if i == n and m == -1:
+            infty = dp[i][j]
+        if i != n - 1:
+            dp[i + 1][j] += dp[i][j]
+        if i != n - 1 and j != m - 1:
+            dp[i + 1][j + 1] += dp[i][j]
+        if j != m - 1:
+            dp[i][j + 1] += dp[i][j]
+print(dp[n - 1][m - 1])
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# 30. Распил брусьев
+# Python
+import math
+l, n = map(int, input().split())
+d = []
+a = list(map(int, input().split()))
+a.insert(0, 0)
+a.append(l)
+n += 2
+for i in range(n):
+    d.append([0] * n)
+for j in range(1, n):
+    for i in range(j - 2, -1, -1):
+        d[i][j] = math.inf
+        for k in range(i + 1, j):
+            d[i][j] = min(d[i][j], d[i][k] + d[k][j])
+        d[i][j] += a[j] - a[i]
+print(d[0][n - 1])
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//31 Площадь комнаты
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//32 Откуда достижима первая вершина
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//33 Радио Байтик
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//34 Десант
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//35 Кружки в Маховниках
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//36. Два коня
+//C++
+#include<fstream>
+#include<queue>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+int main() {
+       int x1, y1, x2, y2;
+       string a1;
+       queue <pair<int, int>> q; // будем хранить координаты исследуемой клетки
+       ifstream in("input.txt");
+       ofstream out("output.txt"); out.clear();
+       in >> a1;    // координаты первого коня
+       x1 = a1[0] - 'a'; // пересчитываем в числа
+       y1 = a1[1] - '1';
+       in >> a1;    // координаты второго коня
+       x2 = a1[0] - 'a'; // пересчитываем в числа
+       y2 = a1[1] - '1';
+       vector <vector <int>>  a(8, vector <int>(8, 1000000)); // доска первого коня
+       vector <vector <int>>  c(8, vector <int>(8, 1000000)); // доска второго коня
+       // заполним доску первого коня
+       a[x1][y1] = 0;      // Начнем, помолясь. Путь 1-й ячейки равен 0
+       q.push(make_pair(x1, y1));  // Ибо конь еще не ходил. Индекс в очередь!
+       while (!q.empty()) { // И пока очередь не опустеет и небеса не падут...
+             pair <int, int> b;
+             b = q.front(); // берем из очереди координаты ячейки
+             q.pop();            // и стираем верхушку очереди
+             // всего есть 8 вариантов хода конем
+             // в каждую подходящую клетку заносим длину пути
+             // и координаты отправляем в очередь
+             if (b.first < 6 && b.second < 7 && // 1
+                    a[b.first + 2][b.second + 1] == 1000000) {
+                    a[b.first + 2][b.second + 1] = a[b.first][b.second] + 1;
+                    q.push(make_pair(b.first + 2, b.second + 1));
+             }
+             if (b.first < 7 && b.second < 6 && // 2
+                    a[b.first + 1][b.second + 2] == 1000000) {
+                    a[b.first + 1][b.second + 2] = a[b.first][b.second] + 1;
+                    q.push(make_pair(b.first + 1, b.second + 2));
+             }
+             if (b.first < 6 && b.second > 0 && // 3
+                    a[b.first + 2][b.second - 1] == 1000000) {
+                    a[b.first + 2][b.second - 1] = a[b.first][b.second] + 1;
+                    q.push(make_pair(b.first + 2, b.second - 1));
+             }
+             if (b.first > 0 && b.second < 6 && // 4
+                    a[b.first - 1][b.second + 2] == 1000000) {
+                    a[b.first - 1][b.second + 2] = a[b.first][b.second] + 1;
+                    q.push(make_pair(b.first - 1, b.second + 2));
+             }
+             if (b.first > 1 && b.second < 7 && // 5
+                    a[b.first - 2][b.second + 1] == 1000000) {
+                    a[b.first - 2][b.second + 1] = a[b.first][b.second] + 1;
+                    q.push(make_pair(b.first - 2, b.second + 1));
+             }
+             if (b.first < 7 && b.second > 1 && // 6
+                    a[b.first + 1][b.second - 2] == 1000000) {
+                    a[b.first + 1][b.second - 2] = a[b.first][b.second] + 1;
+                    q.push(make_pair(b.first + 1, b.second - 2));
+             }
+             if (b.first > 0 && b.second > 1 && // 7
+                    a[b.first - 1][b.second - 2] == 1000000) {
+                    a[b.first - 1][b.second - 2] = a[b.first][b.second] + 1;
+                    q.push(make_pair(b.first - 1, b.second - 2));
+             }
+             if (b.first > 1 && b.second > 0 && // 8
+                    a[b.first - 2][b.second - 1] == 1000000) {
+                    a[b.first - 2][b.second - 1] = a[b.first][b.second] + 1;
+                    q.push(make_pair(b.first - 2, b.second - 1));
+             }
+       }
+       // заполним доску второго коня
+       c[x2][y2] = 0;      // Начнем, помолясь. Путь 1-й ячейки равен 0
+       q.push(make_pair(x2, y2));  // Ибо конь еще не ходил. Индекс в очередь!
+       while (!q.empty()) { // И пока очередь не опустеет и небеса не падут...
+             pair <int, int> b;
+             b = q.front(); // берем из очереди координаты ячейки
+             q.pop();            // и стираем верхушку очереди
+             // всего есть 8 вариантов хода конем
+             // Но сначала проверим, не добрались ли мы до финиша
+             if (a[b.first][b.second] == c[b.first][b.second]) { // кони встретились
+                    out << a[b.first][b.second];
+                    return 0;
+             }
+             // в каждую подходящую клетку заносим длину пути
+             // и координаты отправляем в очередь
+             if (b.first < 6 && b.second < 7 && // 1
+                    c[b.first + 2][b.second + 1] == 1000000) {
+                    c[b.first + 2][b.second + 1] = c[b.first][b.second] + 1;
+                    q.push(make_pair(b.first + 2, b.second + 1));
+             }
+             if (b.first < 7 && b.second < 6 && // 2
+                    c[b.first + 1][b.second + 2] == 1000000) {
+                    c[b.first + 1][b.second + 2] = c[b.first][b.second] + 1;
+                    q.push(make_pair(b.first + 1, b.second + 2));
+             }
+             if (b.first < 6 && b.second > 0 && // 3
+                    c[b.first + 2][b.second - 1] == 1000000) {
+                    c[b.first + 2][b.second - 1] = c[b.first][b.second] + 1;
+                    q.push(make_pair(b.first + 2, b.second - 1));
+             }
+             if (b.first > 0 && b.second < 6 && // 4
+                    c[b.first - 1][b.second + 2] == 1000000) {
+                    c[b.first - 1][b.second + 2] = c[b.first][b.second] + 1;
+                    q.push(make_pair(b.first - 1, b.second + 2));
+             }
+             if (b.first > 1 && b.second < 7 && // 5
+                    c[b.first - 2][b.second + 1] == 1000000) {
+                    c[b.first - 2][b.second + 1] = c[b.first][b.second] + 1;
+                    q.push(make_pair(b.first - 2, b.second + 1));
+             }
+             if (b.first < 7 && b.second > 1 && // 6
+                    c[b.first + 1][b.second - 2] == 1000000) {
+                    c[b.first + 1][b.second - 2] = c[b.first][b.second] + 1;
+                    q.push(make_pair(b.first + 1, b.second - 2));
+             }
+             if (b.first > 0 && b.second > 1 && // 7
+                    c[b.first - 1][b.second - 2] == 1000000) {
+                    c[b.first - 1][b.second - 2] = c[b.first][b.second] + 1;
+                    q.push(make_pair(b.first - 1, b.second - 2));
+             }
+             if (b.first > 1 && b.second > 0 && // 8
+                    c[b.first - 2][b.second - 1] == 1000000) {
+                    c[b.first - 2][b.second - 1] = c[b.first][b.second] + 1;
+                    q.push(make_pair(b.first - 2, b.second - 1));
+             }
+       }
+       out << -1;
+       return 0;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//37 Числа
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//38 Игрушечный лабиринт
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//39 Роботы
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// 40 Сталкер
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
